@@ -1,9 +1,9 @@
 # =================================================================================================
-# Contributing Authors:	    <Anyone who touched the code>
-# Email Addresses:          <Your uky.edu email addresses>
-# Date:                     <The date the file was last edited>
-# Purpose:                  <How this file contributes to the project>
-# Misc:                     <Not Required.  Anything else you might want to include>
+# Contributing Authors:	    Luke Olsen, Will White
+# Email Addresses:          Luke.Olsen@uky.edu, Will.White@uky.edu
+# Date:                     11/7/2023
+# Purpose:                  This file sets up the server that communicates with clients.
+# Misc:                     None.
 # =================================================================================================
 
 import socket
