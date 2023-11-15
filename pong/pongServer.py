@@ -12,7 +12,7 @@ import threading
 # Use this file to write your server logic
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      # Creating the server
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on localhost need this
-server.bind(("localhost", 12321)) # args are IP, port
+server.bind(("10.47.132.222", 12321)) # args are IP, port
 server.listen(5)
 
 ### You will need to support at least two clients
