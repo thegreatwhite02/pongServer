@@ -8,9 +8,17 @@ class Update:
         self.rScore = rScore
         self.sync = sync
         self.move = move
+    
+    def __repr__(self) -> str:
+        return f"{self.paddle},{self.paddleY},{self.ballX},{self.ballY},{self.lScore},{self.rScore},{self.sync},{self.move}"
+    
+    @classmethod
+    def createWithString(cls, data: str) -> "Update":
+        data = data.split(',')
+        return Update(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
 class GameState:
-    def __init__(self):
+    def __init__(self) -> None:
         self.lPaddleY = 215
         self.rPaddleY = 215
         self.ballX = 320
@@ -20,6 +28,13 @@ class GameState:
         self.lmoving = ""
         self.rmoving = ""
         sync = 0
+    
+    def __repr__(self) -> str:
+        return f"{self.lPaddleY},{self.rPaddleY},{self.ballX},{self.ballY},{self.lscore},{self.rscore},{self.lmoving},{self.rmoving},{self.sync}"
+    
+    @classmethod
+    def createWithString(cls, data: str) -> "GameState":
+        return Update(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
 
 def updateGameState(currGameState: GameState, update: Update) -> GameState:
     # if first packet to get there
