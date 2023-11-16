@@ -33,33 +33,13 @@ from assets.code.helperCode import Paddle, Ball, updateScore
 ### so functions send(client, updatePacket) and receive(...).
 
 # Add a global dictionary to store the current position of each paddle
-paddle_positions = {"left": 0, "right": 0}
 
 def handle_client(client_socket, client_number, all_clients, player_paddle):
-    global paddle_positions
     
     while True:
         try:
             # Receive game state updates from the client
             msg = client_socket.recv(1024).decode()
-            
-            msg_type, msg_content = msg.split(',', 1)
-
-            if msg_type == "paddle_movement":
-                # Extract paddle movement information from the message
-                paddle_movement = msg_content
-
-                # Update the server's knowledge of the player's paddle movement
-                if player_paddle == "left":
-                    paddle_positions["left"] += 1 if paddle_movement == "down" else -1
-                elif player_paddle == "right":
-                    paddle_positions["right"] += 1 if paddle_movement == "down" else -1
-
-                # Broadcast the updated paddle positions to all other clients
-                for other_client_socket in all_clients:
-                    if other_client_socket != client_socket:
-                        other_client_socket.send(msg.encode())
-
 
             # Broadcast the game state to all other clients
             for other_client_socket in all_clients:
