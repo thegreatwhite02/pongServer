@@ -84,7 +84,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # Your code here to send an update to the server on your paddle's information,
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
-        msg = pongUpdate.Update(playerPaddle, playerPaddleObj.rect.y, ball.rect.x, ball.rect.y, lScore, rScore, sync)
+        msg = pongUpdate.Update(playerPaddle, playerPaddleObj.rect.y, ball.rect.x, ball.rect.y, lScore, rScore, sync, playerPaddleObj.moving)
         client.send(msg.encode())
         #game_state = f"{playerPaddle},{playerPaddleObj.rect.y},{opponentPaddleObj.rect.y},{ball.rect.x},{ball.rect.y},{lScore},{rScore}"
         #client.send(game_state.encode())
@@ -168,8 +168,16 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         rScore = server_state.rscore
         ball.rect.x = server_state.ballX
         ball.rect.y = server_state.ballY
-        ### WE NEED TO FIGURE OUT THESE NEXT TWO LINES
-        opponentPaddleObj = server_state.rPaddleY
+        """
+        if playerPaddle == "left":
+            opponentPaddleObj = server_state.rPaddleY
+        else:
+            opponentPaddleObj = server_state.lPaddleY
+        """
+        if playerPaddle == "left":
+            opponentPaddleObj.moving = server_state.rmoving
+        else:
+            opponentPaddleObj.moving = server_state.lmoving
         
         # Parse the received game state and update relevant game objects
         # Example (update with actual parsing logic based on your game state format):
