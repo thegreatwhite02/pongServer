@@ -85,7 +85,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
         msg = pongUpdate.Update(playerPaddle, playerPaddleObj.rect.y, ball.rect.x, ball.rect.y, lScore, rScore, sync, playerPaddleObj.moving)
-        client.send(msg.encode())
+        client.send(repr(msg).encode())
         #game_state = f"{playerPaddle},{playerPaddleObj.rect.y},{opponentPaddleObj.rect.y},{ball.rect.x},{ball.rect.y},{lScore},{rScore}"
         #client.send(game_state.encode())
         
@@ -163,7 +163,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # opponent's game
         
         # Receive game state from the server
-        server_state: pongUpdate.GameState = client.recv(1024).decode()
+        recMsg = client.recv(1024).decode()
+        server_state = pongUpdate.GameState.createWithString(recMsg)
         lScore = server_state.lscore
         rScore = server_state.rscore
         ball.rect.x = server_state.ballX
