@@ -10,6 +10,7 @@ import pygame
 import tkinter as tk
 import sys
 import socket
+import pongUpdate
 
 from assets.code.helperCode import *
 
@@ -84,6 +85,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
         
+        game_state = f"{playerPaddle},{playerPaddleObj.rect.y},{opponentPaddleObj.rect.y},{ball.rect.x},{ball.rect.y},{lScore},{rScore}"
+        client.send(game_state.encode())
         
         # =========================================================================================
 
@@ -156,7 +159,18 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # =========================================================================================
         # Send your server update here at the end of the game loop to sync your game with your
         # opponent's game
+        
+        # Receive game state from the server
+        server_state = client.recv(1024).decode()
+        
+        # Parse the received game state and update relevant game objects
+        # Example (update with actual parsing logic based on your game state format):
+        playerPaddle, playerPaddleY, opponentPaddleY, ballX, ballY, lScore, rScore = map(int, server_state.split(','))
 
+        playerPaddleObj.rect.y = playerPaddleY
+        opponentPaddleObj.rect.y = opponentPaddleY
+        ball.rect.x, ball.rect.y = ballX, ballY
+        lScore, rScore = lScore, rScore
         # =========================================================================================
 
 
@@ -180,6 +194,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
     client.connect(("10.47.132.222", 12321))      #Connceting to the server
 
     # Get the required information from your server (screen width, height & player paddle, "left or "right)
+    playerPaddle = client.recv(1024).decode()
 
 
     # If you have messages you'd like to show the user use the errorLabel widget like so
