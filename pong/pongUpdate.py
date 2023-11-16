@@ -1,5 +1,5 @@
 class Update:
-    def __init__(self, paddle: str, paddleY: int, ballX: int, ballY: int, lScore: int, rScore: int, sync: int) -> None:
+    def __init__(self, paddle: str, paddleY: int, ballX: int, ballY: int, lScore: int, rScore: int, sync: int, move: str) -> None:
         self.paddle = paddle
         self.paddleY = paddleY
         self.ballX = ballX
@@ -7,6 +7,7 @@ class Update:
         self.lScore = lScore
         self.rScore = rScore
         self.sync = sync
+        self.move = move
 
 class GameState:
     def __init__(self):
@@ -16,6 +17,8 @@ class GameState:
         self.ballY = 240
         self.lscore = 0
         self.rscore = 0
+        self.lmoving = ""
+        self.rmoving = ""
         sync = 0
 
 def updateGameState(currGameState: GameState, update: Update) -> GameState:
@@ -23,8 +26,10 @@ def updateGameState(currGameState: GameState, update: Update) -> GameState:
     if update.sync == currGameState.sync + 1:
         if update.paddle == "left":
             currGameState.lPaddleY = update.paddleY
+            currGameState.lmoving = update.move
         else:
             currGameState.rPaddleY = update.paddleY
+            currGameState.rmoving = update.move
         currGameState.lscore = update.lScore
         currGameState.rscore = update.rScore
         currGameState.ballX = update.ballX
@@ -35,5 +40,7 @@ def updateGameState(currGameState: GameState, update: Update) -> GameState:
         # only update paddle info
         if update.paddle == "left":
             currGameState.lPaddleY = update.paddleY
+            currGameState.lmoving = update.move
         else:
             currGameState.rPaddleY = update.paddleY
+            currGameState.rmoving = update.move
