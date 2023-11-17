@@ -187,6 +187,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         if "playerPaddleY" in received_game_state:
             opponentPaddleObj.rect.y = received_game_state["playerPaddleY"] 
         if "sync" in received_game_state and received_game_state["sync"] > sync:
+            sync = received_game_state["sync"]
             if "ballX" in received_game_state and "ballY" in received_game_state:
                 ball.rect.x = received_game_state["ballX"]
                 ball.rect.y = received_game_state["ballY"]
