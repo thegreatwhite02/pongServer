@@ -9,32 +9,37 @@ class Update:
         self.sync = sync
         self.move = move
     
-    def __repr__(self) -> str:
-        return f"{self.paddle},{self.paddleY},{self.ballX},{self.ballY},{self.lScore},{self.rScore},{self.sync},{self.move}"
-    
     @classmethod
     def createWithString(cls, data: str) -> "Update":
         data = data.split(',')
         return Update(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
-
-class GameState:
-    def __init__(self) -> None:
-        self.lPaddleY = 215
-        self.rPaddleY = 215
-        self.ballX = 320
-        self.ballY = 240
-        self.lscore = 0
-        self.rscore = 0
-        self.lmoving = ""
-        self.rmoving = ""
-        sync = 0
     
     def __repr__(self) -> str:
-        return f"{self.lPaddleY},{self.rPaddleY},{self.ballX},{self.ballY},{self.lscore},{self.rscore},{self.lmoving},{self.rmoving},{self.sync}"
+        return f"{self.paddle},{self.paddleY},{self.ballX},{self.ballY},{self.lScore},{self.rScore},{self.sync},{self.move}"
+        
+class GameState:
+    def __init__(self, lPaddleY, rPaddleY, ballX, ballY, lscore, rscore, lmoving, rmoving, sync) -> None:
+        self.lPaddleY = lPaddleY
+        self.rPaddleY = rPaddleY
+        self.ballX = ballX
+        self.ballY = ballY
+        self.lscore = lscore
+        self.rscore = rscore
+        self.lmoving = lmoving
+        self.rmoving = rmoving
+        self.sync = sync
+    
+    @classmethod
+    def createStart(cls) -> "GameState":
+        return GameState(215, 215, 320, 240, 0, 0, "", "", 0)
     
     @classmethod
     def createWithString(cls, data: str) -> "GameState":
-        return Update(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
+        data = data.split(',')
+        return GameState(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
+    
+    def __repr__(self) -> str:
+        return f"{self.lPaddleY},{self.rPaddleY},{self.ballX},{self.ballY},{self.lscore},{self.rscore},{self.lmoving},{self.rmoving},{self.sync}"
 
 def updateGameState(currGameState: GameState, update: Update) -> GameState:
     # if first packet to get there
