@@ -11,6 +11,7 @@ import threading
 import pongUpdate
 import time
 from assets.code.helperCode import Paddle, Ball, updateScore
+import json
 
 
 ### You will need to support at least two clients
@@ -34,13 +35,13 @@ from assets.code.helperCode import Paddle, Ball, updateScore
 
 # Add a global dictionary to store the current position of each paddle
 
-def handle_client(client_socket, client_number, all_clients, player_paddle):
-    
+def handle_client(client_socket, client_number, all_clients):
+    global sync
     while True:
         try:
             # Receive game state updates from the client
             msg = client_socket.recv(1024).decode()
-
+            
             # Broadcast the game state to all other clients
             for other_client_socket in all_clients:
                 if other_client_socket != client_socket:
@@ -77,7 +78,7 @@ while client_count < 2:
     client_socket.send(player_paddle.encode())
 
     # Start a new thread to handle the client
-    client_thread = threading.Thread(target=handle_client, args=(client_socket, client_count, clients, player_paddle))
+    client_thread = threading.Thread(target=handle_client, args=(client_socket, client_count, clients))
     client_thread.start()
 
 # Wait for both threads to finish
