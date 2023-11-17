@@ -91,11 +91,9 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         
         game_state = {
         "playerPaddleY": playerPaddleObj.rect.y,
-        "ballX": ball.rect.x,
-        "ballY": ball.rect.y,
         "lScore": lScore,
         "rScore": rScore,
-}
+        }
 
         json_data = json.dumps(game_state)
         client.send(json_data.encode())
