@@ -20,7 +20,7 @@ from datetime import datetime
 # This is the main game loop.  For the most part, you will not need to modify this.  The sections
 # where you should add to the code are marked.  Feel free to change any part of this project
 # to suit your needs.
-def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
+def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket, clientNum: int) -> None:
     
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -188,13 +188,21 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             opponentPaddleObj.rect.y = received_game_state["playerPaddleY"] 
         if "sync" in received_game_state and received_game_state["sync"] > sync:
             sync = received_game_state["sync"]
-            if "ballX" in received_game_state and "ballY" in received_game_state:
-                ball.rect.x = received_game_state["ballX"]
-                ball.rect.y = received_game_state["ballY"]
+            #if "ballX" in received_game_state and "ballY" in received_game_state:
+                #ball.rect.x = received_game_state["ballX"]
+                #ball.rect.y = received_game_state["ballY"]
             if "lScore" in received_game_state:
                 lScore = received_game_state["lScore"]
             if "rScore" in received_game_state:
                 rScore = received_game_state["rScore"]
+            #if "ballXVel" in received_game_state and "ballYVel" in received_game_state:
+                #ball.xVel = received_game_state["ballXVel"]
+                #ball.yVel = received_game_state["ballYVel"]
+            
+        if clientNum % 2 == 0:
+            if "ballX" in received_game_state and "ballY" in received_game_state:
+                ball.rect.x = received_game_state["ballX"]
+                ball.rect.y = received_game_state["ballY"]
             if "ballXVel" in received_game_state and "ballYVel" in received_game_state:
                 ball.xVel = received_game_state["ballXVel"]
                 ball.yVel = received_game_state["ballYVel"]
@@ -222,8 +230,9 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
     client.connect((ip, int(port)))      #Connceting to the server
 
     # Get the required information from your server (screen width, height & player paddle, "left or "right)
-    paddleAssignment = client.recv(1024).decode()
-
+    info = client.recv(1024).decode()
+    [paddleAssignment, clientNum] = info.split(",")
+    clientNum = int(clientNum)
 
     # If you have messages you'd like to show the user use the errorLabel widget like so
     errorLabel.config(text=f"Some update text. You input: IP: {ip}, Port: {port}")
@@ -232,7 +241,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
 
     # Close this window and start the game with the info passed to you from the server
     app.withdraw()     # Hides the window (we'll kill it later)
-    playGame(640, 480, paddleAssignment, client)  # User will be either left or right paddle
+    playGame(640, 480, paddleAssignment, client, clientNum)  # User will be either left or right paddle
     app.quit()         # Kills the window
 
 
