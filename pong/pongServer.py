@@ -41,14 +41,13 @@ def handle_client(client_socket, client_number, all_clients):
         try:
             # Receive game state updates from the client
             msg = client_socket.recv(1024).decode()
-            
-            # Broadcast the game state to all other clients
+
             for other_client_socket in all_clients:
                 if other_client_socket != client_socket:
                     other_client_socket.send(msg.encode())
-
+                    
         except ConnectionResetError:
-            break
+                    break
 
     print(f"Client {client_number} disconnected.")
     client_socket.close()
