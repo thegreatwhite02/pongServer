@@ -56,7 +56,7 @@ def handle_client(client_socket, client_number, all_clients):
 # Main server setup
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server.bind(("10.47.60.82", 12321))
+server.bind(("10.47.132.222", 12321))
 server.listen(2)  # Allow up to 2 simultaneous clients
 
 print("Server listening on 10.47.60.82:12321...")
@@ -72,9 +72,10 @@ while client_count < 2:
 
     # Determine the player's paddle (left or right)
     player_paddle = "left" if client_count == 1 else "right"
+    msg = player_paddle + "," + str(client_count)
 
     # Send the player's paddle information to the client
-    client_socket.send(player_paddle.encode())
+    client_socket.send(msg.encode())
 
     # Start a new thread to handle the client
     client_thread = threading.Thread(target=handle_client, args=(client_socket, client_count, clients))
@@ -86,4 +87,3 @@ for client_thread in threading.enumerate():
         client_thread.join()
 
 server.close()
-
