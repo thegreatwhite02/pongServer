@@ -12,8 +12,10 @@ import sys
 import socket
 import pongUpdate
 import json
+import time
 
 from assets.code.helperCode import *
+from datetime import datetime
 
 # This is the main game loop.  For the most part, you will not need to modify this.  The sections
 # where you should add to the code are marked.  Feel free to change any part of this project
@@ -86,13 +88,15 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
         
-        #movement_message = f"paddle_movement,{playerPaddleObj.moving}"
-        #client.send(movement_message.encode())
-        
         game_state = {
         "playerPaddleY": playerPaddleObj.rect.y,
+        "ballX": ball.rect.x,
+        "ballY": ball.rect.y,
+        "ballXVel": ball.xVel,
+        "ballYVel": ball.yVel,
         "lScore": lScore,
         "rScore": rScore,
+        "sync": sync
         }
 
         json_data = json.dumps(game_state)
@@ -171,6 +175,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # =========================================================================================
         # Send your server update here at the end of the game loop to sync your game with your
         # opponent's game
+        # Receive updates from the server and adjust the local game state
+        received_game_state = {}
         try:
             msg = client.recv(1024).decode()
             received_game_state = json.loads(msg)
@@ -179,14 +185,19 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
         # Use the received game state to update your local game
         if "playerPaddleY" in received_game_state:
-            opponentPaddleObj.rect.y = received_game_state["playerPaddleY"]
-        if "ballX" in received_game_state and "ballY" in received_game_state:
-            ball.rect.x = received_game_state["ballX"]
-            ball.rect.y = received_game_state["ballY"]
-        if "lScore" in received_game_state:
-            lScore = received_game_state["lScore"]
-        if "rScore" in received_game_state:
-            rScore = received_game_state["rScore"]
+            opponentPaddleObj.rect.y = received_game_state["playerPaddleY"] 
+        if "sync" in received_game_state and received_game_state["sync"] > sync:
+            if "ballX" in received_game_state and "ballY" in received_game_state:
+                ball.rect.x = received_game_state["ballX"]
+                ball.rect.y = received_game_state["ballY"]
+            if "lScore" in received_game_state:
+                lScore = received_game_state["lScore"]
+            if "rScore" in received_game_state:
+                rScore = received_game_state["rScore"]
+            if "ballXVel" in received_game_state and "ballYVel" in received_game_state:
+                ball.xVel = received_game_state["ballXVel"]
+                ball.yVel = received_game_state["ballYVel"]
+        
         # =========================================================================================
 
 
