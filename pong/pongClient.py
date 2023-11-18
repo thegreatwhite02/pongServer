@@ -1,7 +1,7 @@
 # =================================================================================================
 # Contributing Authors:	    Luke Olsen, Will White
 # Email Addresses:          Luke.Olsen@uky.edu, Will.White@uky.edu
-# Date:                     11/7/2023
+# Date:                     11/17/2023
 # Purpose:                  This controls the UI.
 # Misc:                     None.
 # =================================================================================================
@@ -99,7 +99,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         "sync": sync
         }
 
-        # send data as a json
+        # send data as a JSON encoded string
         json_data = json.dumps(game_state)
         client.send(json_data.encode())
         
